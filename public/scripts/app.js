@@ -117,20 +117,20 @@ function renderForecast(card, data) {
   card.querySelector('.current .sunset .value').textContent = sunset;
 
   // Render the next 7 days.
-  const futureTiles = card.querySelectorAll('.future .oneday');
-  futureTiles.forEach((tile, index) => {
-    const forecast = data.daily.data[index + 1];
-    const forecastFor = luxon.DateTime
-        .fromSeconds(forecast.time)
-        .setZone(data.timezone)
-        .toFormat('ccc');
-    tile.querySelector('.date').textContent = forecastFor;
-    tile.querySelector('.icon').className = `icon ${forecast.icon}`;
-    tile.querySelector('.temp-high .value')
-        .textContent = Math.round(forecast.temperatureHigh);
-    tile.querySelector('.temp-low .value')
-        .textContent = Math.round(forecast.temperatureLow);
-  });
+  // const futureTiles = card.querySelectorAll('.future .oneday');
+  // futureTiles.forEach((tile, index) => {
+  //   const forecast = data.daily.data[index + 1];
+  //   const forecastFor = luxon.DateTime
+  //       .fromSeconds(forecast.time)
+  //       .setZone(data.timezone)
+  //       .toFormat('ccc');
+  //   tile.querySelector('.date').textContent = forecastFor;
+  //   tile.querySelector('.icon').className = `icon ${forecast.icon}`;
+  //   tile.querySelector('.temp-high .value')
+  //       .textContent = Math.round(forecast.temperatureHigh);
+  //   tile.querySelector('.temp-low .value')
+  //       .textContent = Math.round(forecast.temperatureLow);
+  // });
 
   // If the loading spinner is still visible, remove it.
   const spinner = card.querySelector('.card-spinner');
@@ -162,8 +162,21 @@ function getForecastFromNetwork(coords) {
  * @return {Object} The weather forecast, if the request fails, return null.
  */
 function getForecastFromCache(coords) {
-  // CODELAB: Add code to get weather forecast from the caches object.
-
+  if (!('caches' in window)) {
+    return null;
+  }
+  const url = `${window.location.origin}/forecast/${coords}`;
+  return caches.match(url)
+    .then((response) => {
+      if (response) {
+        return response.json();
+      }
+      return null;
+    })
+    .catch((err) => {
+      console.error('Error getting data from cache', err);
+      return null;
+    });
 }
 
 /**
@@ -197,7 +210,10 @@ function updateData() {
   Object.keys(weatherApp.selectedLocations).forEach((key) => {
     const location = weatherApp.selectedLocations[key];
     const card = getForecastCard(location);
-    // CODELAB: Add code to call getForecastFromCache
+    getForecastFromCache(location.geo)
+      .then((forecast) => {
+        renderForecast(card, forecast);
+      });
 
     // Get the forecast data from the network.
     getForecastFromNetwork(location.geo)
@@ -249,8 +265,8 @@ function init() {
   updateData();
 
   // Set up the event handlers for all of the buttons.
-  document.getElementById('butRefresh').addEventListener('click', updateData);
-  document.getElementById('butAdd').addEventListener('click', toggleAddDialog);
+  document.getElementById('butAdd').addEventListener('click', updateData);
+  // document.getElementById('butAdd').addEventListener('click', toggleAddDialog);
   document.getElementById('butDialogCancel')
       .addEventListener('click', toggleAddDialog);
   document.getElementById('butDialogAdd')

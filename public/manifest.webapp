@@ -12,6 +12,10 @@
     "name": "firegnu",
     "url": "http://www.kaiostech.com"
   },
+  "permissions": {
+    "serviceworker":{}
+  },
+  "cursor": "true",
   "locales": {
     "en-US": {
       "name": "KaiOS App",
