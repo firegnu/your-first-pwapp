@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "name": "KaiOS Hosted Weather APP",
+  "description": "A sample hosted APP which transported for PWA",
+  "type": "web",
+  "launch_path": "/index.html",
+  "icons": {
+    "56": "/images/icons/icon-56x56.png",
+    "112": "/images/icons/icon-112x112.png"
+  },
+  "developer": {
+    "name": "firegnu",
+    "url": "http://www.kaiostech.com"
+  },
+  "locales": {
+    "en-US": {
+      "name": "KaiOS App",
+      "subtitle": "Short description for the user",
+      "description": "Brief description of your app"
+    }
+  },
+  "default_locale": "en-US"
+}

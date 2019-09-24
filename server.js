@@ -114,6 +114,29 @@ const fakeForecast = {
   },
 };
 
+const hostedManifest = {
+    "version": "1.0.0",
+    "name": "KaiOS Hosted Weather APP",
+    "description": "A sample hosted APP which transported for PWA",
+    "type": "web",
+    "launch_path": "/index.html",
+    "icons": {
+      "56": "/images/icons/icon-56x56.png",
+      "112": "/images/icons/icon-112x112.png"
+    },
+    "developer": {
+      "name": "firegnu",
+      "url": "http://www.kaiostech.com"
+    },
+    "locales": {
+      "en-US": {
+        "name": "KaiOS App",
+        "subtitle": "Short description for the user",
+        "description": "Brief description of your app"
+      }
+    },
+    "default_locale": "en-US"
+  };
 /**
  * Generates a fake forecast in case the weather API is not available.
  *
@@ -131,6 +154,12 @@ function generateFakeForecast(location) {
   return result;
 }
 
+/**
+ * Serving hosted APP manifest for KaiOS
+ */
+function getHostedManifest(req, resp) {
+  resp.json(hostedManifest);
+}
 
 /**
  * Gets the weather forecast from the Dark Sky API for the given location.
@@ -182,6 +211,7 @@ function startServer() {
   app.get('/forecast/:location', getForecast);
   app.get('/forecast/', getForecast);
   app.get('/forecast', getForecast);
+  app.get('/hosted-manifest', getHostedManifest);
 
   // Handle requests for static files
   app.use(express.static('public'));
