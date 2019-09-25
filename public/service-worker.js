@@ -81,11 +81,13 @@ self.addEventListener('fetch', (evt) => {
           .then((response) => {
             // If the response was good, clone it and store it in the cache.
             if (response.status === 200) {
+              console.log('[ServiceWorker] Fetch From remote success!!!!!');
               cache.put(evt.request.url, response.clone());
             }
             return response;
           }).catch((err) => {
             // Network request failed, try to get it from the cache.
+            console.log('[ServiceWorker] Fetch from cache success!!!!!');
             return cache.match(evt.request);
           });
       }));
@@ -95,6 +97,7 @@ self.addEventListener('fetch', (evt) => {
     caches.open(CACHE_NAME).then((cache) => {
       return cache.match(evt.request)
         .then((response) => {
+          console.log(response);
           return response || fetch(evt.request);
         });
     })
